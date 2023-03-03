@@ -6,6 +6,7 @@ class TOC extends Component { // table of content
       let lists = [];
 
       for (let i = 0; i < data.length; i++) {
+         // key는 리액트가 내부적으로 필요해서 요청하는 데이터
          lists.push(<li key={data[i].id}><a href={"/content/" + data[i].id}>{data[i].title}</a></li>);
       }
 
