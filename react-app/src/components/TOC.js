@@ -7,7 +7,28 @@ class TOC extends Component { // table of content
 
       for (let i = 0; i < data.length; i++) {
          // key는 리액트가 내부적으로 필요해서 요청하는 데이터
-         lists.push(<li key={data[i].id}><a href={"/content/" + data[i].id}>{data[i].title}</a></li>);
+         lists.push(
+            <li key={data[i].id}>
+               {/* 1. 속성으로 추가 */}
+               {/* <a
+                  href={"/content/" + data[i].id}
+                  data-id= {data[i].id}
+                  onClick={function (e) {
+                     e.preventDefault();
+                     this.props.onChangePage(e.target.dataset.id);
+                  }.bind(this)}
+               >{data[i].title}</a> */}
+
+               {/* 2. bind로 추가 */}
+               <a
+                  href={"/content/" + data[i].id}
+                  onClick={function (id, e) {
+                     e.preventDefault();
+                     this.props.onChangePage(id);
+                  }.bind(this, data[i].id)}
+               >{data[i].title}</a>
+            </li>
+         );
       }
 
       return (
