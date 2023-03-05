@@ -45,20 +45,27 @@ class App extends Component {
         }
         i++;
       }
-      _article =  <ReadContent title={_title} sub={_desc}></ReadContent>;
+      _article = <ReadContent title={_title} sub={_desc}></ReadContent>;
     } else if (this.state.mode === 'create') {
       _article = <CreateContent onSubmit={function (_title, _desc) {
         this.max_content_id++;
 
-        // 원본에 직접 추가 X -> 성능 개선 시 까다로움
-        // this.state.contents.push({
-        //   id: this.max_content_id,
-        //   title: _title,
-        //   desc: _desc
-        // });
+        // 방법1. 원본에 직접 추가 X -> 성능 개선 시 까다로움
+        /*
+        this.state.contents.push({
+          id: this.max_content_id,
+          title: _title,
+          desc: _desc
+        }); 
 
-        // concat 사용
-        let _contents = this.state.contents.concat({
+        this.setState({
+          contents: contents
+        });
+        */
+
+        // 방법 2. concat 사용
+        /*
+        const _contents = this.state.contents.concat({
           id: this.max_content_id,
           title: _title,
           desc: _desc
@@ -67,6 +74,20 @@ class App extends Component {
         this.setState({
           contents: _contents
         });
+        */
+
+        // 방법 3. immutable (객체는 Object.assign 사용)
+        const newContents = Array.from(this.state.contents);
+        newContents.push({
+          id: this.max_content_id,
+          title: _title,
+          desc: _desc
+        });
+
+        this.setState({
+          contents: newContents
+        });
+
       }.bind(this)}></CreateContent>;
     }
 
@@ -85,23 +106,24 @@ class App extends Component {
           }.bind(this)}>{this.state.subject.title}</a></h1>
           {this.state.subject.sub}
         </header> */}
+
         <Subject
           title={this.state.subject.title}
           sub={this.state.subject.sub}
           onChangePage={function () {
             this.setState({ mode: 'welcome' });
           }.bind(this)}
-        >
-        </Subject>
-        <TOC onChangePage={function (id) {
-          this.setState({
-            mode: 'read',
-            selected_content_id: Number(id)
-          });
+        ></Subject>
 
-        }.bind(this)}
+        <TOC onChangePage={function (id) {
+            this.setState({
+              mode: 'read',
+              selected_content_id: Number(id)
+            });
+          }.bind(this)}
           data={this.state.contents}></TOC>
-        <Control onChangeMode={function (_mode) { 
+
+        <Control onChangeMode={function (_mode) {
           this.setState({
             mode: _mode
           });

@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 
 class TOC extends Component { // table of content
+   shouldComponentUpdate(newProps, newState) {
+      // state의 원본을 변경하면 성능 개선에 좋지 않은 이유
+      if (this.props.data === newProps.data) {
+         return false;
+      }
+      return true;
+   }
+
    render() {
       const data = this.props.data;
       let lists = [];
